@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hoymiles Extension – OpenDTU (compact)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #eef1f5;
+    --paper: #ffffff;
+    --ink: #1b2530;
+    --ink-2: #4b5765;
+    --line: #d4dae2;
+    --line-strong: #9aa5b3;
+    --sun: #f0b400;
+    --sun-soft: #fff3c4;
+    --grid: #2d6bd6;
+    --grid-soft: #dce8fb;
+    --bat: #2a9d57;
+    --bat-soft: #d9f2e3;
+    --house: #7a4fd1;
+    --house-soft: #e8dffa;
+    --warn: #d9480f;
+    --warn-soft: #fde5d8;
+    --radius: 10px;
+    --max: 1120px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .flow { animation: none !important; }
+  }
+  body {
+    margin: 0;
+    font-family: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink);
+    background: var(--bg);
+  }
+  a { color: var(--grid); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { text-decoration-thickness: 2px; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+  code, .mono { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-size: 0.92em; }
+  code { background: #f1f3f6; padding: 1px 6px; border-radius: 5px; }
+  pre { background: var(--ink); color: #e7ecf2; padding: 18px 22px; border-radius: var(--radius); overflow-x: auto; font-size: 14.5px; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+
+  header.top {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(238,241,245,0.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  header.top .wrap { display: flex; align-items: center; gap: 28px; padding: 12px 24px; max-width: var(--max); margin: 0 auto; }
+  header.top .brand { font-weight: 600; white-space: nowrap; }
+  header.top .brand span { display: inline-block; width: 12px; height: 12px; background: var(--house); border-radius: 50%; margin-right: 8px; vertical-align: -1px; }
+  header.top nav { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  header.top nav a { color: var(--ink-2); text-decoration: none; font-size: 14.5px; padding: 6px 10px; border-radius: 6px; white-space: nowrap; }
+  header.top nav a:hover { background: var(--paper); color: var(--ink); }
+
+  main { max-width: var(--max); margin: 0 auto; padding: 0 24px 96px; }
+  .hero { padding: 56px 0 24px; }
+  .hero h1 { font-size: clamp(30px, 4.2vw, 46px); line-height: 1.12; font-weight: 600; margin: 0 0 14px; max-width: 20ch; letter-spacing: -0.01em; }
+  .hero p.lead { font-size: 19px; color: var(--ink-2); max-width: 62ch; margin: 0 0 32px; }
+
+  section { padding: 56px 0 8px; border-top: 1px solid var(--line); margin-top: 40px; }
+  section h2 { font-size: 28px; font-weight: 600; margin: 0 0 6px; letter-spacing: -0.01em; }
+  section h2 .num { display: inline-block; min-width: 40px; color: var(--ink-2); font-weight: 500; }
+  section > p, section .prose p { max-width: 70ch; }
+  section .prose { max-width: 70ch; }
+  h3 { font-size: 19px; font-weight: 600; margin: 34px 0 10px; }
+
+  figure { margin: 26px 0; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+  figure svg { width: 100%; height: auto; display: block; }
+  figcaption { font-size: 14.5px; color: var(--ink-2); margin-top: 12px; max-width: 80ch; }
+
+  table { border-collapse: collapse; width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; font-size: 15.5px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #f6f8fa; font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+  td.right, th.right { text-align: right; white-space: nowrap; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; margin: 22px 0; }
+  .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; }
+  .card h4 { margin: 0 0 6px; font-size: 18px; font-weight: 600; }
+  .card .tag { font-size: 13.5px; color: var(--ink-2); margin-bottom: 14px; }
+  .card.pick { border: 2px solid var(--sun); background: #fffdf3; }
+  .card ul { padding-left: 18px; margin: 8px 0; font-size: 15.5px; }
+  .card li { margin: 4px 0; }
+  .pill { display: inline-block; font-size: 13px; padding: 2px 9px; border-radius: 999px; font-weight: 500; margin-right: 4px; }
+  .pill.ok { background: var(--bat-soft); color: #176a39; }
+  .pill.mid { background: var(--sun-soft); color: #7a5a00; }
+  .pill.bad { background: var(--warn-soft); color: #9a3208; }
+
+  .callout { border-left: 4px solid var(--sun); background: var(--sun-soft); padding: 14px 18px; border-radius: 0 var(--radius) var(--radius) 0; margin: 22px 0; max-width: 78ch; }
+  .callout.warn { border-color: var(--warn); background: var(--warn-soft); }
+  .callout p { margin: 0; }
+  .callout p + p { margin-top: 8px; }
+
+  /* SVG shared styles */
+  .box { fill: #fff; stroke: var(--line-strong); stroke-width: 1.5; }
+  .box.sun { fill: var(--sun-soft); stroke: var(--sun); }
+  .box.grid { fill: var(--grid-soft); stroke: var(--grid); }
+  .box.bat { fill: var(--bat-soft); stroke: var(--bat); }
+  .box.house { fill: var(--house-soft); stroke: var(--house); }
+  .box.ink { fill: var(--ink); stroke: var(--ink); }
+  .box.dim { fill: #f6f8fa; stroke: var(--line); stroke-dasharray: 5 4; }
+  .zone { fill: none; stroke: var(--line-strong); stroke-width: 1.2; stroke-dasharray: 6 5; rx: 14; }
+  .t { font-family: "IBM Plex Sans", system-ui, sans-serif; font-size: 14px; fill: var(--ink); }
+  .t.b { font-weight: 600; }
+  .t.s { font-size: 12.5px; fill: var(--ink-2); }
+  .t.w { fill: #fff; }
+  .t.m { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; }
+  .t.zone { font-size: 13px; fill: var(--ink-2); font-weight: 500; letter-spacing: 0; }
+  .ln { fill: none; stroke: var(--line-strong); stroke-width: 2; }
+  .ln.sun { stroke: var(--sun); }
+  .ln.grid { stroke: var(--grid); }
+  .ln.bat { stroke: var(--bat); }
+  .ln.house { stroke: var(--house); }
+  .ln.ink { stroke: var(--ink); }
+  .ln.dash { stroke-dasharray: 6 5; }
+  .flow { stroke-dasharray: 8 7; animation: flow 1.1s linear infinite; }
+  @keyframes flow { to { stroke-dashoffset: -30; } }
+</style>
+</head>
+<body>
+
+<!-- shared arrowheads for all graphics on this page -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#9aa5b3"/>
+    </marker>
+    <marker id="ah-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1b2530"/>
+    </marker>
+    <marker id="ah-sun" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#f0b400"/>
+    </marker>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span></span>Hoymiles Extension</div>
+    <nav>
+      <a href="sigenergy-display-architektur.html">← Base page</a>
+      <a href="#hm-gesamt">Overview</a>
+      <a href="#hm-opendtu">OpenDTU</a>
+      <a href="#hm-daten">Data access</a>
+      <a href="#hm-software">Software</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<div class="hero">
+  <h1>Connecting Hoymiles systems via OpenDTU</h1>
+  <p class="lead">This page extends the Sigenergy architecture with a second system type. The display device, the software layers and the update process stay the same. What is new: a radio receiver next to the inverter and a second driver in the collector. As of 1 November 2026, based on the OpenDTU documentation.</p>
+  <div class="callout">
+    <p><strong>How this page attaches to the base page.</strong> Sections 10, 11, 13 and 14 continue the numbering of the base page. Anything not repeated here (Balena, kiosk, Raspberry Pi, Wi-Fi setup) applies unchanged.</p>
+  </div>
+</div>
+
+<!-- ======================================================= 10 OVERVIEW -->
+<section id="hm-gesamt">
+  <h2><span class="num">10</span>Overview for Hoymiles</h2>
+  <p>Hoymiles microinverters have no network port. They send their data by radio. A small module called OpenDTU receives the radio signal and makes the values available on the home network. OpenDTU pushes its values over MQTT to a small broker on our display device, and the collector subscribes to them. With Sigenergy the display queries the Energy Controller directly; here the values are delivered to it.</p>
+
+  <figure>
+    <svg viewBox="0 0 1080 480" role="img" aria-label="Hoymiles overview: PV modules, inverter, OpenDTU, router, display and Balena Cloud">
+      <!-- Zone: At the customer -->
+      <rect class="zone" x="20" y="90" width="430" height="370"/>
+      <text class="t zone" x="36" y="114">At the customer: Hoymiles system</text>
+
+      <!-- PV -->
+      <rect class="box sun" x="40" y="140" width="160" height="58" rx="8"/>
+      <text class="t b" x="120" y="165" text-anchor="middle">PV modules</text>
+      <text class="t s" x="120" y="184" text-anchor="middle">1–6 inputs per unit</text>
+
+      <!-- Inverter -->
+      <rect class="box sun" x="40" y="250" width="160" height="76" rx="8"/>
+      <text class="t b" x="120" y="276" text-anchor="middle">Hoymiles inverter</text>
+      <text class="t s" x="120" y="296" text-anchor="middle">Microinverter</text>
+      <text class="t s" x="120" y="313" text-anchor="middle">HM · HMS · HMT</text>
+      <path class="ln sun" d="M120,198 V248" marker-end="url(#ah-sun)"/>
+
+      <!-- OpenDTU -->
+      <rect class="box house" x="270" y="223" width="160" height="130" rx="10"/>
+      <text class="t b" x="350" y="252" text-anchor="middle">OpenDTU</text>
+      <text class="t s" x="350" y="272" text-anchor="middle">ESP32-S3 + radio chips</text>
+      <text class="t s" x="350" y="290" text-anchor="middle">NRF24 · CMT2300A</text>
+      <text class="t m" x="350" y="318" text-anchor="middle">publishes MQTT</text>
+      <text class="t s" x="350" y="338" text-anchor="middle">to the broker</text>
+
+      <!-- Radio -->
+      <path class="ln ink dash" d="M200,288 H270" marker-end="url(#ah-ink)" marker-start="url(#ah-ink)"/>
+      <text class="t s" x="235" y="276" text-anchor="middle">Radio</text>
+
+      <!-- Not available -->
+      <rect class="box dim" x="40" y="390" width="390" height="56" rx="10"/>
+      <text class="t s" x="235" y="414" text-anchor="middle">Not available via OpenDTU</text>
+      <text class="t s" x="235" y="432" text-anchor="middle">Battery · Grid connection · House consumption · Wallbox</text>
+
+      <!-- Router -->
+      <rect class="box" x="520" y="248" width="130" height="80" rx="10"/>
+      <text class="t b" x="585" y="281" text-anchor="middle">Router</text>
+      <text class="t s" x="585" y="301" text-anchor="middle">Home network, Wi-Fi</text>
+      <path class="ln ink" d="M430,288 H520" marker-end="url(#ah-ink)"/>
+      <text class="t s" x="475" y="276" text-anchor="middle">Wi-Fi or LAN</text>
+
+      <!-- Zone: Our device -->
+      <rect class="zone" x="700" y="90" width="360" height="370"/>
+      <text class="t zone" x="716" y="114">Our device</text>
+
+      <rect class="box sun" x="730" y="180" width="300" height="215" rx="12"/>
+      <text class="t b" x="880" y="212" text-anchor="middle">Display</text>
+      <text class="t s" x="880" y="232" text-anchor="middle">Raspberry Pi 5 + Touch Display 2</text>
+      <rect class="box" x="752" y="250" width="256" height="122" rx="8"/>
+      <text class="t s" x="880" y="272" text-anchor="middle">balenaOS</text>
+      <text class="t m" x="880" y="292" text-anchor="middle">MQTT broker (Mosquitto)</text>
+      <text class="t m" x="880" y="312" text-anchor="middle">collector (Python, MQTT)</text>
+      <text class="t m" x="880" y="332" text-anchor="middle">driver: hoymiles_opendtu</text>
+      <text class="t m" x="880" y="352" text-anchor="middle">ui + Chromium kiosk</text>
+
+      <!-- Router -> Display -->
+      <path class="ln ink flow" d="M650,288 H730" marker-end="url(#ah-ink)"/>
+      <text class="t s" x="690" y="270" text-anchor="middle">Wi-Fi</text>
+      <text class="t m" x="690" y="312" text-anchor="middle">MQTT</text>
+      <text class="t s" x="690" y="328" text-anchor="middle">rate TBD</text>
+
+      <!-- Balena -->
+      <rect class="box" x="760" y="20" width="240" height="50" rx="25"/>
+      <text class="t b" x="880" y="50" text-anchor="middle">balenaCloud – Updates</text>
+      <path class="ln dash" d="M880,180 V70" marker-end="url(#ah)"/>
+      <text class="t s" x="900" y="130">outbound only, HTTPS</text>
+      <text class="t s" x="900" y="146">no open port</text>
+
+      <!-- Legend -->
+      <g transform="translate(470,380)">
+        <line class="ln sun" x1="0" y1="10" x2="26" y2="10"/><text class="t s" x="34" y="14">PV (DC)</text>
+        <line class="ln ink dash" x1="0" y1="34" x2="26" y2="34"/><text class="t s" x="34" y="38">Radio (proprietary)</text>
+        <line class="ln ink" x1="0" y1="58" x2="26" y2="58"/><text class="t s" x="34" y="62">Home network</text>
+      </g>
+    </svg>
+    <figcaption>The OpenDTU module sits within radio range of the inverter and is connected to the home network. The display only knows the home network. The radio link ends at the OpenDTU module. Battery, grid connection, house consumption and wallbox are not provided by this system unless additional metering is installed.</figcaption>
+  </figure>
+
+  <h3>What stays the same, what changes</h3>
+  <table>
+    <thead><tr><th>Component</th><th>Sigenergy</th><th>Hoymiles</th></tr></thead>
+    <tbody>
+      <tr><td>Display device</td><td colspan="2">Raspberry Pi 5 + Touch Display 2, balenaOS, Chromium kiosk. <strong>Unchanged.</strong></td></tr>
+      <tr><td>Update path</td><td colspan="2">balenaCloud, fleet, release pinning. <strong>Unchanged.</strong> One image for all devices; the manufacturer is set per device via an environment variable. Hoymiles devices run one extra container (the MQTT broker).</td></tr>
+      <tr><td>Extra device at the customer</td><td>none</td><td><strong>OpenDTU module</strong> within radio range of the inverter</td></tr>
+      <tr><td>Data source</td><td>Energy Controller, Modbus TCP, port 502</td><td>OpenDTU, MQTT (pushed to a broker on the display device)</td></tr>
+      <tr><td>Driver in the collector</td><td><code>sigenergy_modbus</code></td><td><code>hoymiles_opendtu</code> (new)</td></tr>
+      <tr><td>Data scope</td><td>PV, grid, battery, consumption, phases, wallbox, alarms</td><td>PV per input, AC values, yield, temperature, event log</td></tr>
+      <tr><td>User interface</td><td>Energy flow with all nodes</td><td>Same UI; fields without a value are hidden</td></tr>
+      <tr><td>Control</td><td>Remote EMS via holding registers</td><td>Power limiting and on/off via OpenDTU</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ======================================================= 11 OPENDTU -->
+<section id="hm-opendtu">
+  <h2><span class="num">11</span>What OpenDTU is and how it differs from Modbus</h2>
+  <div class="prose">
+    <p>With Sigenergy, the device already speaks network. We query the controller directly and get an answer. A Hoymiles inverter speaks only radio, and in a format that only Hoymiles' own devices understand. Normally a Hoymiles DTU with a cloud connection handles this.</p>
+    <p>OpenDTU is open-source software for ESP32 microcontrollers that replaces this DTU. The module receives the radio data, stores it and publishes it over MQTT. It is the <strong>interpreter between radio and network</strong>. Which radio chip is needed depends on the inverter series: the HM series needs the NRF24L01+, the HMS and HMT series the CMT2300A.</p>
+  </div>
+
+  <table>
+    <thead><tr><th></th><th>Modbus TCP (Sigenergy)</th><th>OpenDTU (Hoymiles)</th></tr></thead>
+    <tbody>
+      <tr><td>What is it?</td><td>A protocol the device speaks itself</td><td>An add-on device with software that translates radio into network</td></tr>
+      <tr><td>How do you query it?</td><td>Send a register number, get a 16-bit number back</td><td>Not queried: OpenDTU publishes each value to an MQTT broker and the collector subscribes to the topics. (A JSON web API exists as well.)</td></tr>
+      <tr><td>Data format</td><td>Raw number, converted with a gain (523 ÷ 10)</td><td>One topic per value, e.g. <code>ac/power</code> carries the total AC power in watts</td></tr>
+      <tr><td>Access protection</td><td>none; any device on the home network may read and write</td><td>Reading is open by default; settings and control commands require login (user <code>admin</code>). The docs mention an option to protect reading as well.</td></tr>
+      <tr><td>Interface documentation</td><td>Manufacturer protocol with version number (V2.7 / V2.9)</td><td>Community docs. The MQTT topics are documented as a list. The docs describe the separate web API as built primarily for OpenDTU's own interface, use at your own risk, so we avoid depending on it.</td></tr>
+      <tr><td>Additional hardware</td><td>none</td><td>OpenDTU module next to the inverter</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ======================================================= 13 DATA ACCESS -->
+<section id="hm-daten">
+  <h2><span class="num">13</span>Data access: MQTT</h2>
+  <p>OpenDTU can deliver its values over MQTT or through a JSON web API. We use MQTT: OpenDTU pushes updates to a broker on the display device, and the collector subscribes to them. The web API stays as a fallback.</p>
+
+  <div class="cards">
+    <div class="card pick">
+      <h4>MQTT</h4>
+      <div class="tag">Our path</div>
+      <span class="pill ok">push, no polling</span><span class="pill ok">documented topics</span><span class="pill mid">broker needed</span>
+      <ul>
+        <li>The broker (Mosquitto) runs as an extra container on the display device</li>
+        <li>OpenDTU gets the broker address and a base topic in its MQTT settings</li>
+        <li>Totals: <code>ac/power</code>, <code>ac/yieldday</code>, <code>dc/power</code>, <code>ac/is_valid</code></li>
+        <li>Per device: <code>&lt;serial number&gt;/status/reachable</code>, <code>&lt;serial number&gt;/0/temperature</code>, <code>&lt;serial number&gt;/&lt;1–4&gt;/power</code></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Web API over HTTP</h4>
+      <div class="tag">Fallback</div>
+      <span class="pill ok">no broker</span><span class="pill ok">read without login</span><span class="pill mid">interface may change</span>
+      <ul>
+        <li>The collector would call <code>/api/livedata/status</code> at a fixed interval</li>
+        <li>Per-inverter details via <code>?inv=&lt;serial number&gt;</code></li>
+        <li>According to the docs it is built for OpenDTU's own interface and may change</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Topics the driver uses</h3>
+  <p>Topics sit below the base topic that is configured in OpenDTU.</p>
+  <table>
+    <thead><tr><th>Field in the data model</th><th>MQTT topic</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">pv_power_w</td><td><code>ac/power</code></td><td>Sum of AC power of all enabled inverters, in W</td></tr>
+      <tr><td class="mono">yield_day_wh</td><td><code>ac/yieldday</code></td><td>in Wh</td></tr>
+      <tr><td class="mono">yield_total_kwh</td><td><code>ac/yieldtotal</code></td><td>in kWh</td></tr>
+      <tr><td class="mono">string_power_w[n]</td><td><code>&lt;serial&gt;/&lt;n&gt;/power</code></td><td>Inputs count from 1</td></tr>
+      <tr><td class="mono">inverter_temp_c</td><td><code>&lt;serial&gt;/0/temperature</code></td><td>in °C</td></tr>
+      <tr><td class="mono">online</td><td><code>dtu/status</code></td><td><code>online</code> / <code>offline</code>: whether OpenDTU itself is reachable</td></tr>
+      <tr><td class="mono">asleep</td><td><code>&lt;serial&gt;/status/reachable</code></td><td>0 or 1: whether the inverter answers. Combine with <code>dtu/status</code>.</td></tr>
+      <tr><td class="mono">radio quality</td><td><code>&lt;serial&gt;/radio/rx_fail_*</code></td><td>Counters of failed radio packets</td></tr>
+      <tr><td class="mono">battery_*, grid_power_w, load_power_w</td><td colspan="2"><strong>not available.</strong> Fields stay empty and the UI hides them.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p><strong>What MQTT means for the setup.</strong> The display device becomes the server: OpenDTU must know its address, so give it a fixed one (DHCP reservation); whether a hostname works instead is not checked. The broker should be protected with a login (OpenDTU's MQTT settings page was not checked for this). And if the display device is off, OpenDTU has nowhere to deliver its values.</p>
+  </div>
+</section>
+
+<!-- ======================================================= 14 SOFTWARE -->
+<section id="hm-software">
+  <h2><span class="num">14</span>Software changes</h2>
+  <p>The collector gets a driver layer. Each driver translates the language of one system type into the same data model. Everything behind it (SQLite, WebSocket, UI, kiosk) no longer knows any manufacturer. Adding another manufacturer later means adding another driver.</p>
+
+  <figure>
+    <svg viewBox="0 0 1080 400" role="img" aria-label="Two drivers feeding a common data model">
+      <!-- sources -->
+      <rect class="box ink" x="30" y="50" width="210" height="80" rx="10"/>
+      <text class="t b w" x="135" y="82" text-anchor="middle">Sigen Energy Controller</text>
+      <text class="t m" x="135" y="106" text-anchor="middle" style="fill:#ffd76a">Modbus TCP :502</text>
+
+      <rect class="box house" x="30" y="260" width="210" height="80" rx="10"/>
+      <text class="t b" x="135" y="292" text-anchor="middle">OpenDTU</text>
+      <text class="t m" x="135" y="316" text-anchor="middle">MQTT via local broker</text>
+
+      <!-- drivers -->
+      <path class="ln ink" d="M240,90 H300" marker-end="url(#ah-ink)"/>
+      <path class="ln ink" d="M240,300 H300" marker-end="url(#ah-ink)"/>
+      <rect class="box sun" x="300" y="50" width="230" height="80" rx="10"/>
+      <text class="t b" x="415" y="82" text-anchor="middle">Sigenergy driver</text>
+      <text class="t m" x="415" y="106" text-anchor="middle">sigenergy_modbus</text>
+
+      <rect class="box sun" x="300" y="260" width="230" height="80" rx="10"/>
+      <text class="t b" x="415" y="292" text-anchor="middle">Hoymiles driver (new)</text>
+      <text class="t m" x="415" y="316" text-anchor="middle">hoymiles_opendtu</text>
+
+      <!-- model -->
+      <path class="ln ink" d="M530,90 H570 V180 H610" marker-end="url(#ah-ink)"/>
+      <path class="ln ink" d="M530,300 H570 V220 H610" marker-end="url(#ah-ink)"/>
+      <rect class="box bat" x="610" y="70" width="240" height="260" rx="12"/>
+      <text class="t b" x="730" y="100" text-anchor="middle">Common data model</text>
+      <text class="t m" x="634" y="132">pv_power_w</text>
+      <text class="t m" x="634" y="156">yield_day_wh</text>
+      <text class="t m" x="634" y="180">battery_soc?</text>
+      <text class="t m" x="634" y="204">battery_power_w?</text>
+      <text class="t m" x="634" y="228">grid_power_w?</text>
+      <text class="t m" x="634" y="252">load_power_w?</text>
+      <text class="t m" x="634" y="276">online · asleep</text>
+      <text class="t s" x="634" y="312">? = not every system provides it</text>
+
+      <!-- core -->
+      <path class="ln ink" d="M850,200 H890" marker-end="url(#ah-ink)"/>
+      <rect class="box" x="890" y="130" width="160" height="140" rx="12"/>
+      <text class="t b" x="970" y="162" text-anchor="middle">Collector core</text>
+      <text class="t s" x="970" y="190" text-anchor="middle">SQLite</text>
+      <text class="t s" x="970" y="210" text-anchor="middle">WebSocket</text>
+      <text class="t s" x="970" y="230" text-anchor="middle">UI · kiosk</text>
+      <text class="t s" x="970" y="254" text-anchor="middle">knows no manufacturer</text>
+
+      <text class="t s" x="540" y="382" text-anchor="middle">An environment variable per device sets which driver runs.</text>
+    </svg>
+  </figure>
+
+  <h3>Driver interface (draft)</h3>
+  <p>Sketch, untested. It shows what every driver has to deliver:</p>
+<pre><code># collector/drivers/base.py
+from dataclasses import dataclass
+from typing import Protocol
+
+@dataclass
+class Sample:
+    ts: float
+    pv_power_w: float | None = None
+    yield_day_wh: float | None = None
+    battery_soc: float | None = None
+    battery_power_w: float | None = None
+    grid_power_w: float | None = None
+    load_power_w: float | None = None
+    online: bool = True      # device reachable on the home network
+    asleep: bool = False     # inverter not reachable, e.g. at night
+
+class Driver(Protocol):
+    name: str
+    async def discover(self) -&gt; str | None: ...   # finds the system on the home network
+    async def read(self) -&gt; Sample: ...           # one measurement cycle</code></pre>
+
+<pre><code># collector/drivers/hoymiles_opendtu.py  (core, MQTT)
+class HoymilesMqtt:
+    def __init__(self, base: str):       # base topic as set in OpenDTU
+        self.base, self.state = base, {}
+
+    async def listen(self):              # runs in the background
+        async with aiomqtt.Client("broker") as c:   # asyncio MQTT client
+            await c.subscribe(f"{self.base}/#")
+            async for m in c.messages:
+                key = str(m.topic).removeprefix(self.base + "/")
+                self.state[key] = m.payload.decode()
+
+    async def read(self) -&gt; Sample:
+        s = self.state
+        dtu_up = s.get("dtu/status") == "online"
+        reachable = any(v == "1" for k, v in s.items()
+                        if k.endswith("/status/reachable"))
+        return Sample(
+            ts=time.time(),
+            pv_power_w=_num(s.get("ac/power")),      # _num: str -&gt; float | None
+            yield_day_wh=_num(s.get("ac/yieldday")),
+            online=dtu_up,
+            # night vs. radio problem: use time of day and &lt;serial&gt;/radio/rx_fail_*
+            asleep=dtu_up and not reachable,
+        )</code></pre>
+
+  <h3>Changes to the project</h3>
+<pre><code>broker/
+└── mosquitto.conf              # Hoymiles devices only
+collector/
+├── drivers/
+│   ├── base.py                 # Sample, Driver
+│   ├── sigenergy_modbus.py     # former poller.py + registers.py
+│   └── hoymiles_opendtu.py     # new
+├── discovery.py                # calls discover() of the selected driver
+├── poller.py                   # loop: driver.read() -> store
+└── config.py                   # DRIVER=..., MQTT_BASE_TOPIC (Hoymiles)</code></pre>
+
+  <div class="cards">
+    <div class="card">
+      <h4>Pairing via the broker</h4>
+      <p style="font-size:15.5px;margin:0">There is no network scan. OpenDTU is told the broker's address and the base topic once. The collector recognises the device as soon as its first messages arrive under that base topic.</p>
+    </div>
+    <div class="card">
+      <h4>Night is downtime</h4>
+      <p style="font-size:15.5px;margin:0">Without sun the inverter switches off. OpenDTU then reports "not reachable". That is not an error. The UI shows "System asleep" and the previous day's yield.</p>
+    </div>
+    <div class="card">
+      <h4>One fleet, one image</h4>
+      <p style="font-size:15.5px;margin:0">The driver is set per device in balenaCloud as a device variable. Hoymiles devices additionally run the broker as a fourth container. The update process and fleet from section 7 stay unchanged.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+</body>
+</html>
