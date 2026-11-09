@@ -1,0 +1,7 @@
+We want to build a hardware product for this course. Since this is what interest us the most and gives us the biggest freedom in building what we want. 
+We started with the exact question that came up in the very first intensive class: how does the data actaully arrive where we want it? TO be more specific: Solar panels all over germany broadcast data in some way back to the producer (probably in china) so that the panel owner can watch the output of their panel on an app. So why cant we catch that info before it goes into the web and display it locally.
+While this question came from just curiosity and to be fair just having an actual micorcontroller and raspberry pi to fiddle around with just sounds a lot of fun we actaully think that there might be a market for this:
+Jannik and Daniel work in the field and while that is in sligly different parts they both think that homeowners and investors would like to have a display at home showing the data. sure they can look on thier phone but thats boring and to have a tropy haning on your wall reminding that you have pv on your roof is smoething we belive people would want.
+If we want to build and sell something like this it must be as modular as possible so that it works with as many providers as possible so that we could install this at any home that has a pv on the roof.
+How do we want todo this:
+The plan is to use the pv panel that code already has build a prototype to learn as much as possible ab allow us to mkae as many mystakes as early as possible
