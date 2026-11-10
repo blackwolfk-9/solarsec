@@ -1,0 +1,26 @@
+Your project output is focused on system design/architecture (for example, a diagram), for a specific purpose. You do not need to build it, but you must present and justify the design in terms of components and interfaces. You may build specific components, or specific interfaces, to explore or demonstrate concepts.
+
+	•	We have to work within many constraints, including hardware constraints.
+	•	Components that are well-separated should be easy to swap out, with minimal changes. For example, the diagram below shows both the examples used today, and a potential path to access the same data with HomeAssistant iOS app, which uses a real-time WebSocket API (and also partly a REST API, but diagrams reflect WebSockets).
+	•	To swap out components, it is important to know that the connection is there, and to know what kind of connection it is. Then, you can find out how to change settings for that connection.
+
+Analyze your software architecture to start thinking about what kinds of programming languages, frameworks, and libraries you might need where. Some points to consider:
+	•	Which environment(s) does your software run in? For example: the cloud, a microinverter, a smart home device, etc... What constraints might come with each of these?
+	•	What basic kinds of software are you running: a website? an analysis toolkit? Embedded software?
+	•	What software solutions do you need that you expect a lot of others need too - and expect to be able to find a existing software for that can solve your problem?
+	•	Which elements of your product/project idea are relatively niche, innovative, or perhaps a part of a USP, where you expect that you will have to develop your own custom software, since you are doing something new after all?
+	•	What else might you need to consider in these choices? For example: perception of a language ("boring" and stable vs. "new and shiny"), integration with 3rd party software, ability to find developers who know / want to work with this language, etc.
+If you are not sure yet what to do, consider a company that provides solar paneling & micro-inverters for some of the following stakeholder groups:
+	•	Small Private users (e.g. balcony paneling in Berlin)
+	•	Medium private users (e.g. stand-alone house in countryside)
+	•	Commercial office buildings (such as Kalle Halle) that can generate some electricity but it is not their main business model
+	•	Commercial solar parks whose core business is generating & selling electricity
+Don't Forget...
+	•	Internal Stakeholders at your company
+	•	Various level of government
+	•	The manufacturer(s) of the equipment
+Some questions to consider:
+	•	which stakeholders needs which information? (privacy)
+	•	which stakeholders should be able to make which decisions? (authorization)
+	•	How should a local system react if it is disconnected from the internet?
+	•	How should a cloud-based system react if it can't reach the solar panels?
